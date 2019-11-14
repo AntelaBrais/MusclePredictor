@@ -16,17 +16,59 @@ let dataTensor = tf.tensor2d(data)
 let labelsTensor = tf.tensor1d(pointsLabel, 'int32')
 
 let ys = tf.oneHot(labelsTensor, 8)
+labelsTensor.dispose()
 
-dataTensor.print()
-ys.print()
+let model: any
 
-// let labelList = [
-//   'LowerLeg',
-//   'Thigh',
-//   'Gluteus',
-//   'Abdomen',
-//   'Pectoral',
-//   'Deltoid',
-//   'Arm',
-//   'Forearm'
-// ]
+model = tf.sequential()
+
+let hiddenLayer = tf.layers.dense({
+  units: 16,
+  activation: 'sigmoid',
+  inputDim: 2
+})
+
+let outputLayer = tf.layers.dense({
+  units: 8,
+  activation: 'softmax'
+})
+
+model.add(hiddenLayer)
+model.add(outputLayer)
+
+const learningRate = 0.2
+const optimizer = tf.train.sgd(learningRate)
+
+model.compile({
+  optimizer,
+  loss: 'categoricalCrossentropy'
+})
+
+async function trainNeuralNet() {
+  await model.fit(dataTensor, ys, {
+    epochs: 200,
+    validationSplit: 0.15,
+    shuffle: true,
+    callbacks: {
+      onTrainBegin: () => {
+        console.log('Training started')
+      },
+      onTrainEnd: () => {
+        console.log('Training ended')
+        makePrediction()
+      },
+      onEpochEnd: (num: any, logs: any) => {
+        console.log('Epoch:' + num)
+        console.log('Loss:' + logs.loss)
+      }
+    }
+  })
+}
+
+trainNeuralNet()
+
+async function makePrediction() {
+  let result = await model.predict(tf.tensor2d([[0.428, 0.84]]))
+  let labelPredicted = result.argMax(1)
+  labelPredicted.print()
+}
