@@ -11,8 +11,8 @@ import { s7 } from '../logic/datas/s7'
 
 function IndexPage() {
   let maxPoints = [
-    { x: 0, y: 0 },
-    { x: 1, y: 1 }
+    { x: 0, y: 0, label: 10 },
+    { x: 1, y: 1, label: 10 }
   ]
   const data = s0.concat(s1, s2, s3, s4, s5, s6, s7, maxPoints)
 

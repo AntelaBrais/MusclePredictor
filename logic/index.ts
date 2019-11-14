@@ -57,7 +57,7 @@ let forearmPoints = {
   maxY: 0.687
 }
 
-export let segmentsPoints = {
+export let segmentsReferencePoints = {
   lowerLegPoints,
   thighPoints,
   gluteusPoints,
@@ -68,7 +68,7 @@ export let segmentsPoints = {
   forearmPoints
 }
 
-let segmentsPointsArray = [
+let segmentsReferencePointsArray = [
   lowerLegPoints,
   thighPoints,
   gluteusPoints,
@@ -84,28 +84,38 @@ interface SegmentDataPoint {
   y: number
 }
 
+let arriedDataPoints: any = []
+
 function createPoints(referencePoints: any) {
   referencePoints.map((segment: any, i: number) => {
     const randomX = tf.randomUniform([500, 1], segment.minX, segment.maxX)
-
     const randomY = tf.randomUniform([500, 1], segment.minY, segment.maxY)
 
     const dataPoints = tf.concat([randomX, randomY], 1)
 
-    let arriedDataPoints: any = dataPoints.arraySync()
+    let segmentPoints: any = dataPoints.arraySync()
+
+    segmentPoints.map((point: any) => {
+      point.push(i)
+    })
+
+    arriedDataPoints.push(segmentPoints)
 
     let pointsArray: Array<SegmentDataPoint> = []
 
     arriedDataPoints.map((array: any) => {
       let objectifyElement = {
         x: Number(array[0]),
-        y: Number(array[1])
+        y: Number(array[1]),
+        label: i
       }
       pointsArray.push(objectifyElement)
     })
+    console.log(i)
 
-    fs.writeFileSync(`./logic/datas/s${i}.js`, JSON.stringify(pointsArray))
+    // fs.writeFileSync(`./logic/datas/s${i}.js`, JSON.stringify(pointsArray))
   })
+  fs.writeFileSync(`./logic/datas/rawData.js`, JSON.stringify(arriedDataPoints))
 }
 
-createPoints(segmentsPointsArray)
+createPoints(segmentsReferencePointsArray)
