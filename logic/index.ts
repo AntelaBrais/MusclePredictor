@@ -85,6 +85,7 @@ interface SegmentDataPoint {
 }
 
 let arriedDataPoints: any = []
+let pointsLabel: any = []
 
 function createPoints(referencePoints: any) {
   referencePoints.map((segment: any, i: number) => {
@@ -95,8 +96,14 @@ function createPoints(referencePoints: any) {
 
     let segmentPoints: any = dataPoints.arraySync()
 
-    segmentPoints.map((point: any) => {
-      point.push(i)
+    // Si se activan estas lineas, se añade la etiqueta.
+    // segmentPoints.map((point: any) => {
+    //   point.push(i)
+    // })
+
+    // Estas lineas añaden la etiqueta por cada punto (500 aprox.)
+    segmentPoints.map(() => {
+      pointsLabel.push(i)
     })
 
     arriedDataPoints.push(segmentPoints)
@@ -113,9 +120,13 @@ function createPoints(referencePoints: any) {
     })
     console.log(i)
 
+    // Con esta opción los datos son objectos.
     // fs.writeFileSync(`./logic/datas/s${i}.js`, JSON.stringify(pointsArray))
+
+    // Con esta opción los datos son arrays
+    // fs.writeFileSync(`./logic/datas/s${i}.js`, JSON.stringify(segmentPoints))
   })
-  fs.writeFileSync(`./logic/datas/rawData.js`, JSON.stringify(arriedDataPoints))
+  fs.writeFileSync(`./logic/datas/pointsLabel.js`, JSON.stringify(pointsLabel))
 }
 
 createPoints(segmentsReferencePointsArray)
