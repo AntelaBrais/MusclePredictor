@@ -11,17 +11,28 @@ import { s7 } from '../logic/datas/s7'
 
 function IndexPage() {
   let maxPoints = [
-    { x: 0, y: 0, label: 10 },
-    { x: 1, y: 1, label: 10 }
+    [0, 0],
+    [1, 1]
   ]
+
   const data = s0.concat(s1, s2, s3, s4, s5, s6, s7, maxPoints)
+  const objectData: any = []
+
+  data.map((element) => {
+    let el = {
+      x: element[0],
+      y: element[1]
+    }
+    objectData.push(el)
+  })
+  console.log(data)
 
   const scatterConfig = {
     labels: ['Scatter'],
     datasets: [
       {
         label: 'My First dataset',
-        fill: false,
+        fill: true,
         backgroundColor: 'rgba(75,192,192,0.4)',
         pointBorderColor: 'rgba(75,192,192,1)',
         pointBackgroundColor: '#fff',
@@ -29,10 +40,10 @@ function IndexPage() {
         pointHoverRadius: 5,
         pointHoverBackgroundColor: 'rgba(75,192,192,1)',
         pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
+        pointHoverBorderWidth: 1,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: data
+        data: objectData
       }
     ]
   }

@@ -46,7 +46,8 @@ model.compile({
 
 async function trainNeuralNet() {
   await model.fit(dataTensor, ys, {
-    epochs: 200,
+    epochs: 500,
+    batchSize: 20,
     validationSplit: 0.15,
     shuffle: true,
     callbacks: {
@@ -59,6 +60,7 @@ async function trainNeuralNet() {
       },
       onEpochEnd: (num: any, logs: any) => {
         console.log('Epoch:' + num)
+        console.log(tf.memory().numTensors)
         console.log('Loss:' + logs.loss)
       }
     }
@@ -68,7 +70,7 @@ async function trainNeuralNet() {
 trainNeuralNet()
 
 async function makePrediction() {
-  let result = await model.predict(tf.tensor2d([[0.428, 0.84]]))
+  let result = await model.predict(tf.tensor2d([[0.402, 0.3]]))
   let labelPredicted = result.argMax(1)
   labelPredicted.print()
 }
